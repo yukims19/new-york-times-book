@@ -7,15 +7,26 @@ export const fetchBookList = () => dispatch => {
     "http://api.nytimes.com/svc/books/v3/lists/overview.jsonp?callback=foobar&api-key=fGb2r2svRqG3avUwuU2j5UaIG7D7TANB"
   )
     .then(res => res.text())
-    .then(data => {
-      let validJson = eval(data);
-      let results = validJson.results;
-      let lists = results.lists;
-      let bookList = lists.map(list => list.books).flat();
-      console.log(bookList);
+    .then(jsonP => {
+      let validJson;
+      var foo = new Function("foobar", jsonP);
+      foo(function(json) {
+        validJson = json;
+      });
+      const results = validJson.results;
+      const lists = results.lists;
+      const bookList = lists.map(list => list.books).flat();
+      const bookListUnique = [];
+      const map = new Map();
+      for (const item of bookList) {
+        if (!map.has(item.primary_isbn10)) {
+          map.set(item.primary_isbn10, true);
+          bookListUnique.push(item);
+        }
+      }
       dispatch({
         type: "FETCH_BOOKLIST",
-        payload: bookList
+        payload: bookListUnique
       });
     })
     .catch(error => {
@@ -25,7 +36,6 @@ export const fetchBookList = () => dispatch => {
 };
 
 export const displayBookDetail = bookInfo => dispatch => {
-  console.log("reached!!!!");
   dispatch({
     type: "DISPLAY_BOOK_DETAIL",
     payload: bookInfo

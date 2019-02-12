@@ -12,13 +12,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class BookOverview extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleClick = book => {
-    console.log("reached!!!!");
-
     this.props.displayBookDetail(book);
   };
 
@@ -28,12 +22,20 @@ class BookOverview extends Component {
         {this.props.bookList ? (
           this.props.bookList.map(book => {
             return (
-              <Link to="/bookDetail">
+              <Link
+                key={book.primary_isbn10}
+                to={{
+                  pathname: "/bookDetail",
+                  search: "?isbn=" + book.primary_isbn10
+                }}
+              >
                 <div
                   className="book-overview"
                   onClick={e => this.handleClick(book)}
                 >
-                  <img src={book.book_image} alt="Book Image" />
+                  <div className="img-wrapper">
+                    <img src={book.book_image} alt="Book Cover" />
+                  </div>
                   <h3>{book.title}</h3>
                   <p>{book.contributor}</p>
                 </div>

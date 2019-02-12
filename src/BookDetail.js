@@ -9,7 +9,7 @@ class BookDetail extends Component {
             <img
               className="book-image"
               src={this.props.bookInfo.book_image}
-              alt="Book Image"
+              alt="Book Cover"
             />
             <div className="book-detail">
               <p>
@@ -35,7 +35,12 @@ class BookDetail extends Component {
               <div className="btn-wrapper">
                 {this.props.bookInfo.buy_links.map(link => {
                   return (
-                    <a href={link.url} target="_blank">
+                    <a
+                      key={link.name}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <button>Buy at {link.name}</button>
                     </a>
                   );
@@ -44,7 +49,10 @@ class BookDetail extends Component {
             </div>
           </div>
         ) : (
-          <p>Sorry, book information not found...</p>
+          <p>
+            Sorry, book information not found. Please select a book from the
+            main page.
+          </p>
         )}
       </div>
     );
